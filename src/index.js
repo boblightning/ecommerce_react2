@@ -3,11 +3,21 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import { rootReducers } from './redux/reducers';
 
+const globalStore = createStore(rootReducers);
 ReactDOM.render(
-  <React.StrictMode>
+  // Provider membuat sistem terpusat
+  <Provider store={globalStore}> 
+  <BrowserRouter>
     <App />
-  </React.StrictMode>,
+  </BrowserRouter>
+  </Provider>
+  ,
   document.getElementById('root')
 );
 
