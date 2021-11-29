@@ -2,18 +2,18 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { Table, Button } from 'reactstrap';
 import ModalEditProduct from '../components/ModalEditProduct';
-import {productAction} from '../redux/actions';
-import { connect } from 'react-redux'
-
-const API_URL = "http://localhost:2000"
-
+import ModalProduct from '../components/ModalProduct';
+import { API_URL } from '../helper';
 class ProductManagement extends Component {
     constructor(props) {
         super(props);
         this.state = {
             productList: [],
-            modalEditOpen:false,
-            detailProduk:{}
+            modalEditOpen: false,
+            modalOpen: false,
+            detailProduk: {},
+            thumbnailIdx: 0,
+            selectedIndex: null
         }
     }
 
@@ -23,10 +23,9 @@ class ProductManagement extends Component {
 
     getData = () => {
         axios.get(`${API_URL}/products`)
-            .then(response => {
-                this.setState({productList:response.data})
-                console.log("Dari Respon ==>",response.data)
-                this.props.productAction(response.data[0])
+            .then(res => {
+                console.log(res.data)
+                this.setState({ productList: res.data })
             })
             .catch(err => {
                 console.log(err)
@@ -38,7 +37,18 @@ class ProductManagement extends Component {
             return <tr>
                 <td>{index + 1}</td>
                 <td style={{ width: '20vw', textAlign: 'center' }}>
-                    <img src={item.images[0]} width="80%" alt={item.nama + index} />
+                    {
+                        this.state.selectedIndex==index ?
+                        <img src={item.images[this.state.thumbnailIdx]} width="80%" alt={item.nama + index} />
+                        :
+                        <img src={item.images[0]} width="80%" alt={item.nama + index} />
+                    }
+                    <div>
+                        {item.images.map((val, idx) => {
+                            return <img src={val} width="20%" alt={item.nama + index}
+                                onClick={() => this.setState({ thumbnailIdx: idx, selectedIndex:index })} />
+                        })}
+                    </div>
                 </td>
                 <td>{item.nama}</td>
                 <td>{item.brand}</td>
@@ -50,14 +60,26 @@ class ProductManagement extends Component {
         })
     }
 
+    onBtDelete = () => {
+
+    }
+
     render() {
         return (
             <div className="container p-3">
                 <h3 className="text-center">Produk Management</h3>
+                <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+
+                    <Button type="button" color="success" onClick={() => this.setState({ modalOpen: !this.state.modalOpen })}>Add</Button>
+                </div>
                 <ModalEditProduct
                     modalOpen={this.state.modalEditOpen}
                     detailProduk={this.state.detailProduk}
                     btClose={() => this.setState({ modalEditOpen: !this.state.modalEditOpen })}
+                />
+                <ModalProduct modalOpen={this.state.modalOpen}
+                    btClose={() => this.setState({ modalOpen: !this.state.modalOpen })}
+                    getData={this.getData}
                 />
                 <Table>
                     <thead>
@@ -80,39 +102,4 @@ class ProductManagement extends Component {
     }
 }
 
-export default connect(null,{productAction}) (ProductManagement);
-
-// import axios from 'axios';
-// import React from 'react';
-// import TableData from '../components/Table';
-
-
-
-// class ProductManagement extends React.Component {
-//     constructor(props) {
-//         super(props);
-//         this.state = { 
-//             productsList:[],
-//             modalEditOpen:false,
-//             detailProduk:{}
-//          }
-//     }
-
-//     getData =()=>{
-//         axios.get()
-//     }
-
-//     handleCounterChange = (newValue) =>{
-//         this.setState({
-//             products:newValue
-//         })
-//     }
-
-//     render() { 
-//         return ( 
-//             <TableData onCounterChange={(value)=>this.handleCounterChange(value)} />
-//          );
-//     }
-// }
- 
-// export default ProductManagement;
+export default ProductManagement;
