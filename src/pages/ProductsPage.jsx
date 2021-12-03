@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button, ButtonGroup, Card, CardBody, CardImg, CardTitle, FormGroup, Input, InputGroup, InputGroupText, Label, Spinner } from 'reactstrap'
 import { connect } from 'react-redux';
-import { getProductsAction, sortingAction } from '../redux/actions'
+import { getProductsAction, getProductsSort } from '../redux/actions'
 import { Link } from 'react-router-dom';
 class ProductsPage extends React.Component {
     constructor(props) {
@@ -66,35 +66,41 @@ class ProductsPage extends React.Component {
         this.inSearchMin.value = null
     }
 
-    btnClick = () => {
-        console.log(this.inSearchSort.value)
-        if (this.inSearchSort.value == "harga-asc") {
-            this.props.sortingAction({
-                hargaAsc: this.inSearchSort.value
-            })
-        } else if (this.inSearchSort.value == "harga-desc") {
-            this.props.sortingAction({
-                hargaDesc: this.inSearchSort.value
-            })
-        } else if (this.inSearchSort.value == "nama-asc") {
-            this.props.sortingAction({
-                namaAsc: this.inSearchSort.value
-            })
-        } else if (this.inSearchSort.value == "nama-desc") {
-            this.props.sortingAction({
-                namaDesc: this.inSearchSort.value
-            })
-        } else {
-            this.props.sortingAction()
-        }
+    handleSort = (e) => {
+        this.props.getProductsSort({
+            field: e.target.value.split('-')[0],
+            sortType: e.target.value.split('-')[1]
+        })
     }
+    // btnClick = () => {
+    //     console.log(this.inSearchSort.value)
+    //     if (this.inSearchSort.value == "harga-asc") {
+    //         this.props.sortingAction({
+    //             hargaAsc: this.inSearchSort.value
+    //         })
+    //     } else if (this.inSearchSort.value == "harga-desc") {
+    //         this.props.sortingAction({
+    //             hargaDesc: this.inSearchSort.value
+    //         })
+    //     } else if (this.inSearchSort.value == "nama-asc") {
+    //         this.props.sortingAction({
+    //             namaAsc: this.inSearchSort.value
+    //         })
+    //     } else if (this.inSearchSort.value == "nama-desc") {
+    //         this.props.sortingAction({
+    //             namaDesc: this.inSearchSort.value
+    //         })
+    //     } else {
+    //         this.props.sortingAction()
+    //     }
+    // }
 
     render() {
         return (
             <div className="pt-5">
                 <div className="container">
                     <div className="shadow bg-white p-2 rounded mb-3">
-                        <div style={{ display: "flex", justifyContent: "space-around" }}>
+                        <div style={{ display: "flex", justifyContent: "space-around" }}>     
                             <FormGroup>
                                 <Label>Nama</Label>
                                 <Input type="text" id="text" placeholder="Cari produk"
@@ -112,16 +118,16 @@ class ProductsPage extends React.Component {
                             <FormGroup>
                                 <Label>Sort</Label>
                                 <Input type="select" style={{ width: "250px" }}
-                                    innerRef={(element) => this.inSearchSort = element}>
+                                    onChange={this.handleSort}>
                                     <option value="harga-asc">Harga Asc</option>
                                     <option value="harga-desc">Harga Desc</option>
                                     <option value="nama-asc">A-Z</option>
                                     <option value="nama-desc">Z-A</option>
                                     <option value="id-asc">Reset</option>
                                 </Input>
-                            <InputGroupText style={{ cursor: "pointer" }} onClick={this.btnClick}>
+                            {/* <InputGroupText style={{ cursor: "pointer" }} onClick={this.btnClick}>
                                 Click
-                            </InputGroupText>
+                            </InputGroupText> */}
                             </FormGroup>
 
                         </div>
@@ -153,4 +159,4 @@ const mapToProps = ({ productsReducer }) => {
     }
 }
 
-export default connect(mapToProps, { getProductsAction, sortingAction })(ProductsPage);
+export default connect(mapToProps, { getProductsAction, getProductsSort })(ProductsPage);

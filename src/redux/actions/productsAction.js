@@ -34,28 +34,43 @@ export const getProductsAction = (search = null) => {
     }
 }
 
-export const sortingAction = (sort = null) => {
+// export const sortingAction = (sort = null) => {
+//     return async (dispatch) => {
+//         try {
+//             let res;
+//             if (sort) {
+
+//                 if (sort.namaAsc) {
+//                     res = await axios.get(`${API_URL}/products?_sort=nama&_order=asc`)
+//                 } else if (sort.namaDesc) {
+//                     res = await axios.get(`${API_URL}/products?_sort=nama&_order=desc`)
+
+//                 } else if (sort.hargaAsc) {
+//                     res = await axios.get(`${API_URL}/products?_sort=harga&_order=asc`)
+
+//                 } else if (sort.hargaDesc) {
+//                     res = await axios.get(`${API_URL}/products?_sort=harga&_order=desc`)
+
+//                 }
+//             } else {
+//                 res = await axios.get(`${API_URL}/products`)
+
+//             }
+//             dispatch({
+//                 type: "GET_DATA_PRODUCTS",
+//                 payload: res.data
+//             })
+
+//         } catch (error) {
+//             console.log(error)
+//         }
+//     }
+// }
+
+export const getProductsSort = (sort) => {
     return async (dispatch) => {
         try {
-            let res;
-            if (sort) {
-
-                if (sort.namaAsc) {
-                    res = await axios.get(`${API_URL}/products?_sort=nama&_order=asc`)
-                } else if (sort.namaDesc) {
-                    res = await axios.get(`${API_URL}/products?_sort=nama&_order=desc`)
-
-                } else if (sort.hargaAsc) {
-                    res = await axios.get(`${API_URL}/products?_sort=harga&_order=asc`)
-
-                } else if (sort.hargaDesc) {
-                    res = await axios.get(`${API_URL}/products?_sort=harga&_order=desc`)
-
-                }
-            } else {
-                res = await axios.get(`${API_URL}/products`)
-
-            }
+            let res = await axios.get(`${API_URL}/products?_sort=${sort.field}&_order=${sort.sortType}`)
             dispatch({
                 type: "GET_DATA_PRODUCTS",
                 payload: res.data

@@ -6,7 +6,8 @@
       "email": "admin@mail.com",
       "password": "1234",
       "role": "admin",
-      "status": "Active"
+      "status": "Active",
+      "cart": []
     },
     {
       "username": "abdi",
@@ -14,7 +15,8 @@
       "password": "1234",
       "role": "user",
       "status": "Active",
-      "id": 2
+      "id": 2,
+      "cart": []
     },
     {
       "username": "edo",
@@ -22,7 +24,25 @@
       "password": "1234",
       "role": "user",
       "status": "Active",
-      "id": 3
+      "id": 3,
+      "cart": [
+        {
+          "image": "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/334/0933452_PE791908_S4.jpg",
+          "nama": "LINNEBÄCK",
+          "brand": "IKEA",
+          "harga": 995000,
+          "type": "Black",
+          "qty": 1
+        },
+        {
+          "image": "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/391/0939185_PE794439_S4.jpg",
+          "nama": "Ranjang Kayu",
+          "brand": "DIY",
+          "harga": "3500000",
+          "type": "Cream",
+          "qty": 1
+        }
+      ]
     }
   ],
   "products": [
@@ -101,25 +121,27 @@
       "id": 3
     },
     {
-      "nama": "IDANÄS",
+      "nama": "Ranjang Kayu",
       "deskripsi": " Anda dapat dengan mudah menyedot debu di bawah rangka tempat tidur untuk menjaga ruang tetap bersih dan bebas debu.  Ada banyak ruang di bawah tempat tidur untuk kotak penyimpanan sehingga sempurna untuk menyimpan selimut dan bantal tambahan.  Sisi tempat tidur dapat disesuaikan memungkinkan Anda untuk menggunakan kasur dengan ketebalan yang berbeda.  Veneer kayu memberi Anda tampilan, rasa dan keindahan yang sama seperti kayu solid dengan variasi unik dalam serat, warna, dan tekstur.",
-      "brand": "IKEA",
+      "brand": "DIY",
       "kategori": "Rangka tempat tidur",
-      "harga": 5499000,
+      "harga": "3500000",
       "stock": [
         {
           "id": null,
-          "type": "White",
-          "qty": 5
+          "type": "Cream",
+          "qty": 5,
+          "stock": "25"
         },
         {
           "id": null,
           "type": "Black",
-          "qty": 10
+          "qty": 10,
+          "stock": "20"
         }
       ],
       "images": [
-        "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/160/0916066_PE784942_S4.jpg",
+        "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/391/0939185_PE794439_S4.jpg",
         "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/323/0932344_PE791460_S4.jpg",
         "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/391/0939185_PE794439_S4.jpg"
       ],
