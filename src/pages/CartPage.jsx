@@ -8,20 +8,11 @@ import { updateUserCart } from '../redux/actions';
 class CartPage extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            total: 0,
-            // inc:0,
-            // dec:0
-        }
+        this.state = {}
     }
 
     printCart = () => {
         return this.props.cart.map((value, index) => {
-            // if (this.state.inc > 0) {
-            //     this.state.total = this.state.total + parseInt(value.harga)
-            // } else if (this.state.dec < 0) {
-            //     this.state.total = this.state.total - parseInt(value.harga)
-            // }
             return (
                 <div className="row shadow p-1 mb-3 bg-white rounded" >
                     <div className="col-md-2">
@@ -29,7 +20,7 @@ class CartPage extends React.Component {
                     </div>
                     <div className="col-md-3 d-flex justify-content-center flex-column">
                         <h5 style={{ fontWeight: 'bolder' }}>{value.nama}</h5>
-                        <h4 style={{ fontWeight: 'bolder' }}>Rp {value.harga} </h4>
+                        <h4 style={{ fontWeight: 'bolder' }}>Rp {value.harga.toLocaleString()}</h4>
                     </div>
                     <div className="col-md-1 d-flex align-items-center">
                         <h5 style={{ fontWeight: 'bolder' }}>{value.type}</h5>
@@ -49,49 +40,40 @@ class CartPage extends React.Component {
                             </div>
                             <h4>Rp {(value.harga * value.qty).toLocaleString()}</h4>
                         </div>
-                        <Button color="warning" style={{ border: 'none', float: 'right', marginLeft: "1vw" }} onClick={() => this.deleteCart(index)}>Remove</Button>
+                        <Button color="warning" style={{ border: 'none', float: 'right', marginLeft: "1vw" }} onClick={() => this.onBtRemove(index)}>Remove</Button>
                     </div>
                 </div>
             )
         })
     }
 
-    deleteCart = (index) => {
-        this.props.cart.splice(index, 1)
-        axios.patch(`${API_URL}/users/${this.props.iduser}`, { cart: this.props.cart })
-            .then((res) => {
-                this.props.updateUserCart(res.data.cart)
-            }).catch((err) => {
-                console.log(err)
-            })
-    }
-
     onBtInc = (index) => {
         let temp = [...this.props.cart];
         temp[index].qty += 1
-        // this.state.inc += 1
-        axios.patch(`${API_URL}/users/${this.props.iduser}`, {
-            cart: temp
-        })
-            .then((res) => {
-                this.props.updateUserCart(res.data.cart)
-            }).catch((err) => {
-                console.log(err)
-            })
+        this.props.updateUserCart(temp, this.props.iduser)
     }
 
     onBtDec = (index) => {
         let temp = [...this.props.cart];
-        temp[index].qty -= 1
-        // this.state.dec -= 1
-        axios.patch(`${API_URL}/users/${this.props.iduser}`, {
-            cart: temp
-        })
-            .then((res) => {
-                this.props.updateUserCart(res.data.cart)
-            }).catch((err) => {
-                console.log(err)
-            })
+        if (temp[index].qty > 1) {
+            temp[index].qty -= 1
+        } else {
+            temp.splice(index, 1)
+        }
+        this.props.updateUserCart(temp, this.props.iduser);
+    }
+
+    onBtRemove = (index) => {
+        let temp = [...this.props.cart];
+        temp.splice(index, 1)
+        this.props.updateUserCart(temp, this.props.iduser);
+    }
+
+    totalPayment = () => {
+        let total = 0;
+
+        this.props.cart.forEach((value, index) => total += value.qty * value.harga)
+        return total
     }
 
     render() {
@@ -104,7 +86,7 @@ class CartPage extends React.Component {
                 <div className="col-4">
                     <div className="shadow p-4 mb-3 bg-white rounded">
                         <h3 style={{}}>Total Payment</h3>
-                        <h2 style={{ fontWeight: 'bold' }}>{this.state.total}</h2>
+                        <h2 style={{ fontWeight: 'bold' }}>Rp. {this.totalPayment()}</h2>
                         <FormGroup>
                             <Label for="ongkir">Biaya Pengiriman</Label>
                             <Input type="text" id="ongkir" innerRef={elemen => this.ongkir = elemen} />

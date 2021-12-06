@@ -27,19 +27,11 @@
       "id": 3,
       "cart": [
         {
-          "image": "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/334/0933452_PE791908_S4.jpg",
-          "nama": "LINNEBÄCK",
-          "brand": "IKEA",
-          "harga": 995000,
+          "image": "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/557/0955765_PE804101_S4.jpg",
+          "nama": "HAUGA V.2",
+          "brand": "Mr. DYI",
+          "harga": 1200000,
           "type": "Black",
-          "qty": 1
-        },
-        {
-          "image": "https://d2xjmi1k71iy2m.cloudfront.net/dairyfarm/id/images/391/0939185_PE794439_S4.jpg",
-          "nama": "Ranjang Kayu",
-          "brand": "DIY",
-          "harga": "3500000",
-          "type": "Cream",
           "qty": 1
         }
       ]
