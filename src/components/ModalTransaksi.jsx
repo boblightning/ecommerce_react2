@@ -1,57 +1,52 @@
 import React from 'react';
-import { Modal, ModalBody, ModalHeader,Button, Card } from 'reactstrap';
+import { Button, Card, Modal, ModalBody, ModalHeader } from 'reactstrap'
 
 const ModalTransaksi = (props) => {
-
-    const totalQty = () => {
-        let total = 0
-        props.dataTransaksi.detail.forEach((val) => {
-            total += val.qty
-        });
-        return total
-    }
-
-    const printDetailProduk = () => {
-        return props.dataTransaksi.detail.map((value, index) => {
-            return (
-                <Card>
-                    <div className="row">
-                        <div className="col-md-2">
-                            <img style={{margin:"auto", display:"block"}} src={props.dataTransaksi.detail[index].image} width="100%" />
-                        </div>
-                        <div className="col-md-6">
-                            {/* NAMA, QTY, dan HARGA per pcs */}
-                            <p style={{ fontWeight: "bold" }}>{props.dataTransaksi.detail[index].nama}</p>
-                            <p className="text-muted">{value.qty} x Rp. {props.dataTransaksi.detail[index].harga.toLocaleString()}</p>
-                        </div>
-                        <div className="col-md-4">
-                            {/* TOTAL HARGA */}
-                            <p>Total Harga</p>
-                            <p style={{ fontWeight: "bold" }}>Rp. {props.dataTransaksi.detail[index].totalHarga.toLocaleString()}</p>
-                        </div>
+    const { dataTransaksi } = props;
+    const printDetail = () => {
+        return dataTransaksi.detail.map((value, index) => {
+            return <Card>
+                <div className="row p-2">
+                    <div className="col-md-2">
+                        <img src={value.image} width="100%" />
                     </div>
-                </Card>
-            )
+                    <div className="col-md-6">
+                        <h6 style={{ fontWeight: "bolder", margin: 0 }}>{value.nama}</h6>
+                        <p className="text-muted">{value.qty} x Rp. {value.harga.toLocaleString()}</p>
+                    </div>
+                    <div className="col-md-4">
+                        <p className="m-0">Total Harga</p>
+                        <h6 style={{ fontWeight: "bolder", margin: 0 }}>Rp. {(value.qty * value.harga).toLocaleString()}</h6>
+                        {/* Total harga */}
+                    </div>
+                </div>
+            </Card>
         })
     }
 
-
+    const totalBarang = () => {
+        let total = 0
+        dataTransaksi.detail.forEach((item) => {
+            total += item.qty
+        })
+        return total
+    }
     return (
         <Modal isOpen={props.openModal}
             toggle={props.toggleModal} size="lg">
             <ModalHeader className="d-block shadow-sm">
-                <span className="material-icons" style={{ float: "right" }}>
+                <span className="material-icons" style={{ float: "right", cursor: "pointer" }} onClick={props.toggleModal}>
                     close
                 </span>
-                <div style={{ textAlign: "center" }} >
+                <div style={{ textAlign: "center" }}>
                     <h4 style={{ fontWeight: "700" }}>Detail Transaksi</h4>
                 </div>
             </ModalHeader>
             <ModalBody>
                 {
-                    props.dataTransaksi.detail ?
+                    dataTransaksi ?
                         <div className="row">
-                            <div className="col-md-8 pt-2 px-0" style={{ backgroundColor: "#F3F4F5" }}>
+                            <div className="col-md-8 px-0" style={{ backgroundColor: "#F3F4F5" }}>
                                 <Card className="px-4 rounded" style={{ border: "none" }}>
                                     <p style={{ fontWeight: "bold" }}>{props.dataTransaksi.status}</p>
                                     <span className="d-flex justify-content-between">
@@ -65,34 +60,41 @@ const ModalTransaksi = (props) => {
                                 </Card>
                                 <Card className="px-4 py-3 mt-2 rounded" style={{ border: "none" }}>
                                     <p style={{ fontWeight: "bold" }}>Detail Produk</p>
-                                    {printDetailProduk()}
+                                    {printDetail()}
                                 </Card>
                                 <Card className="px-4 py-3 mt-2 rounded" style={{ border: "none" }}>
                                     <p style={{ fontWeight: "bold" }}>Rincian Pembayaran</p>
                                     <span className="d-flex justify-content-between">
-                                        <p>Total Harga barang {totalQty()}</p>
-                                        <p style={{ fontWeight: "bold", color: "#3498db" }}>Rp. {(props.dataTransaksi.totalPayment).toLocaleString()}</p>
+                                        <p>Total Harga ({totalBarang()} barang)</p>
+                                        <p style={{ fontWeight: "bold", color: "#3498db" }}>Rp. {(dataTransaksi.totalPayment - dataTransaksi.ongkir).toLocaleString()}</p>
                                     </span>
                                     <span className="d-flex justify-content-between">
                                         <p>Total Ongkos Kirim</p>
-                                        <p style={{ fontWeight: "bold", color: "#3498db" }}>Rp. {props.dataTransaksi.ongkir.toLocaleString()}</p>
+                                        <p style={{ fontWeight: "bold", color: "#3498db" }}>Rp. {dataTransaksi.ongkir.toLocaleString()}</p>
                                     </span>
                                     <span className="d-flex justify-content-between">
                                         <p>Total Bayar</p>
-                                        <p style={{ fontWeight: "bold", color: "#3498db" }}>Rp.  {((props.dataTransaksi.totalPayment) + (props.dataTransaksi.ongkir)).toLocaleString()}</p>
+                                        <p style={{ fontWeight: "bold", color: "#3498db" }}>Rp. {dataTransaksi.totalPayment.toLocaleString()}</p>
                                     </span>
                                 </Card>
                             </div>
                             <div className="col-md-4 p-3">
-                                <Button outline size="lg" className="my-2" style={{ width: "100%" }}>Chat Penjual</Button>
+                                <Button
+                                    outline
+                                    size="lg"
+                                    className="my-2"
+                                    style={{ width: "100%" }}>
+                                    Chat Penjual
+                                </Button>
                                 <Button outline size="lg" style={{ width: "100%" }}>Bantuan</Button>
+                                <Button outline color='danger' size="lg" style={{ width: "100%" }} onClick={() => props.onBtCancel(props.dataTransaksi.id)}>Batal</Button>
                             </div>
                         </div>
-                        : <p>No Data</p>
+                        : <p style={{ textAlign: "center" }}> No Data ⚠️</p>
                 }
             </ModalBody>
-        </Modal >
+        </Modal>
     )
-}
+};
 
 export default ModalTransaksi;
