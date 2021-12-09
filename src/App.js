@@ -13,6 +13,9 @@ import ProductsPage from './pages/ProductsPage';
 import { API_URL } from './helper';
 import ProductDetail from './pages/ProductDetail';
 import CartPage from './pages/CartPage';
+import NotFoundPage from './pages/NotFound';
+import HistoryPage from './pages/HistoryPage';
+import TransactionAdminPage from './pages/TransactionManagement';
 
 class App extends React.Component {
   constructor(props) {
@@ -28,22 +31,22 @@ class App extends React.Component {
   }
 
   keepLogin = async () => {
-    try{
-    let local = localStorage.getItem("data");
-    if (local) {
-      // re-assign variable local dengan JSON parse
-      local = JSON.parse(local)
-      let res = await this.props.loginAction(local.email,local.password)
-      if(res.success){
-        this.setState({loading:false})
+    try {
+      let local = localStorage.getItem("data");
+      if (local) {
+        // re-assign variable local dengan JSON parse
+        local = JSON.parse(local)
+        let res = await this.props.loginAction(local.email, local.password)
+        if (res.success) {
+          this.setState({ loading: false })
+        }
+      } else {
+        this.setState({ loading: false })
       }
-    } else {
-      this.setState({ loading: false })
+    } catch (error) {
+      console.log(error)
     }
-  }catch(error){
-    console.log(error)
   }
-}
 
   // getProducts = () => {
   //   axios.get(`${API_URL}/products`)
@@ -61,14 +64,33 @@ class App extends React.Component {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/auth-page" element={<AuthPage />} />
-          <Route path="/product-management" element={<ProductManagement />} />
           <Route path="/products" element={<ProductsPage />} />
           <Route path="/product-detail" element={<ProductDetail />} />
-          <Route path="/cart-user" element={<CartPage />} />
+          {
+            this.props.role == "user" ?
+              <>
+                <Route path="/cart-user" element={<CartPage />} />
+                <Route path="/history-user" element={<HistoryPage />} />
+              </>
+              :
+              this.props.role == "admin" ?
+                <>
+                  <Route path="/product-management" element={<ProductManagement />} />
+                  <Route path="/transaction-management" element={<TransactionAdminPage />} />
+                </>
+                :
+                <Route path="/*" element={<NotFoundPage />} />
+          }
+          <Route path="/*" element={<NotFoundPage />} />
         </Routes>
       </div>
     );
   }
 }
 
-export default connect(null, { loginAction, getProductsAction })(App);
+const mapToProps = (state) => {
+  return {
+    role: state.userReducer.role
+  }
+}
+export default connect(mapToProps, { loginAction, getProductsAction })(App);

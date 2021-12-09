@@ -1,63 +1,83 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Navbar, NavbarBrand, NavbarText, Button, NavItem, NavLink, Collapse, Nav, NavbarToggler, UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem, Spinner } from 'reactstrap';
+import { Navbar, Spinner, NavbarBrand, Button, NavItem, NavLink, Collapse, Nav, NavbarToggler, DropdownToggle, DropdownMenu, DropdownItem, UncontrolledDropdown } from 'reactstrap';
 import { connect } from 'react-redux'
-import { logOutAction } from '../redux/actions'
+import { logoutAction } from '../redux/actions'
+
 class NavbarComponent extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            openCollapse: false
+            openCollapse: false,
+            openToggle:false
         }
     }
 
+    toggle=()=>{
+        this.setState({
+            openToggle : !this.state.openToggle
+        })
+
+    }
+
+    totalQty = ()=>{
+        let total=0
+            this.props.cart.forEach((val) => {
+                total += val.qty   
+            });
+            return total
+    }
+
     render() {
-        // console.log(window.location)
         return (
-            <Navbar expand="md" className="shadow bg-white">
+            <Navbar expand="sm" className="shadow mb-5 bg-white rounded">
                 <NavbarBrand>
                     <Link to="/">
-                        <img src="https://www.sipayo.com/wp-content/uploads/2017/12/e-commerce.png"
-                            width="50px" alt="logo-brand" />
+                        <img alt="..." width="50px" src="https://www.sipayo.com/wp-content/uploads/2017/12/e-commerce.png" />
                     </Link>
                 </NavbarBrand>
                 <NavbarToggler onClick={() => this.setState({ openCollapse: !this.state.openCollapse })} />
                 <Collapse isOpen={this.state.openCollapse} navbar>
-                    <Nav >
+                    <Nav>
                         <NavItem>
-                            <Link to="/products" className={`nav-link`} style={{ color: "#2d3436", fontWeight: "bold" }} >
+                            <Link to="/products" className="nav-link" style={{ color: "#2d3436", fontWeight: "bold" }} >
                                 Products
                             </Link>
                         </NavItem>
                         <NavItem>
-                            <NavLink style={{ color: "#2d3436", fontWeight: "bold" }}>
+                            <Link to="/productmanagement" className="nav-link" style={{ color: "#2d3436", fontWeight: "bold" }} >
+                                Product Management
+                            </Link>
+                        </NavItem>
+                        <NavItem>
+                            <NavLink className="nav-link" style={{ color: "#2d3436", fontWeight: "bold" }} >
                                 About
                             </NavLink>
                         </NavItem>
                     </Nav>
                     {
                         this.props.loading ?
-                            <Spinner color="warning" style={{ marginLeft: "auto", marginRight: 10 }}>
-                                Loading...
-                            </Spinner>
+                            <Spinner animation="border" role="status" style={{ marginLeft: "auto" }}>
+                                <span className="visually-hidden">Loading...</span>
+                            </Spinner> 
                             :
                             this.props.username
                                 ?
                                 <UncontrolledDropdown style={{ marginLeft: "auto" }}>
-                                    <DropdownToggle caret nav size="sm" outline className="d-flex align-items-center" style={{ color: "#0984e3" }}>
+                                    <DropdownToggle caret nav size="sm" className="d-flex align-items-center" style={{ color: "#0984e3" }}>
                                         Hello,<b style={{ fontWeight: "bold" }}>{this.props.username}</b>
                                     </DropdownToggle>
                                     {
-                                        this.props.role == "user"
+                                        this.props.role === "user"
                                             ?
-                                            <DropdownMenu right>
+                                            <DropdownMenu>
                                                 <DropdownItem>
                                                     <Link to="/cart-user" style={{ color: "#2d3436", textDecoration: "none" }}>
-                                                        Cart
+                                                        Cart<span className="badge badge-danger" style={{color:"black"}}>{this.totalQty()}</span>
                                                     </Link>
                                                 </DropdownItem>
                                                 <DropdownItem>
-                                                    <Link to="" style={{ color: "#2d3436", textDecoration: "none" }}>
+                                                    <Link to="history-user" style={{ color: "#2d3436", textDecoration: "none" }}>
                                                         Transactions
                                                     </Link>
                                                 </DropdownItem>
@@ -69,27 +89,28 @@ class NavbarComponent extends React.Component {
                                                 <DropdownItem divider />
                                                 <DropdownItem onClick={() => {
                                                     localStorage.removeItem("data");
-                                                    this.props.logOutAction();
+                                                    this.props.logoutAction();
                                                 }}>
                                                     Keluar
                                                 </DropdownItem>
                                             </DropdownMenu>
                                             :
-                                            <DropdownMenu right >
+
+                                            <DropdownMenu>
                                                 <DropdownItem>
-                                                    <Link to="/product-management" style={{ color: "#2d3436" }} className="nav-link">
+                                                    <Link to="/productmanagement" style={{ color: "#2d3436" }} className="nav-link">
                                                         Products Management
                                                     </Link>
                                                 </DropdownItem>
                                                 <DropdownItem>
-                                                    <Link to="/product-management" style={{ color: "#2d3436" }} className="nav-link">
+                                                    <Link to="/productmanagement" style={{ color: "#2d3436" }} className="nav-link">
                                                         Transactions Management
                                                     </Link>
                                                 </DropdownItem>
                                                 <DropdownItem divider />
                                                 <DropdownItem onClick={() => {
                                                     localStorage.removeItem("data");
-                                                    this.props.logOutAction();
+                                                    this.props.logoutAction();
                                                 }}>
                                                     Keluar
                                                 </DropdownItem>
@@ -97,12 +118,12 @@ class NavbarComponent extends React.Component {
                                     }
                                 </UncontrolledDropdown>
                                 :
-                                < Link to="/auth-page" style={{ marginLeft: "auto" }}>
-                                    <Button type="button" color="warning" outline >Masuk dan Daftar</Button>
+                                <Link to="/form" style={{ marginLeft: "auto" }}>
+                                    <Button type="button" color="warning" >Masuk dan Daftar</Button>
                                 </Link>
                     }
                 </Collapse>
-            </Navbar >
+            </Navbar>
         );
     }
 }
@@ -110,8 +131,9 @@ class NavbarComponent extends React.Component {
 const mapToProps = (state) => {
     return {
         username: state.userReducer.username,
-        role: state.userReducer.role
+        role: state.userReducer.role,
+        cart : state.userReducer.cart
     }
 }
 
-export default connect(mapToProps, { logOutAction })(NavbarComponent);
+export default connect(mapToProps, { logoutAction })(NavbarComponent);
